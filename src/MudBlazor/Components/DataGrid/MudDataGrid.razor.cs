@@ -2417,6 +2417,16 @@ namespace MudBlazor
         internal async Task<bool> StartResizeColumn(HeaderCell<T> headerCell, double clientX)
             => await ResizeService.StartResizeColumn(headerCell, clientX, RenderedColumns, ColumnResizeMode, RightToLeft);
 
+        public async ValueTask<bool> ResizeColumnAsync(string columnTitle, double width)
+        {
+            if(RenderedColumns.FirstOrDefault(column => column.Title == columnTitle)?.HeaderCell is { } headerCell)
+            {
+                return await StartResizeColumn(headerCell, width);
+            }
+
+            return false;
+        }
+        
         internal async Task<double> GetActualHeight()
         {
             var gridRect = await _gridElement.MudGetBoundingClientRectAsync();

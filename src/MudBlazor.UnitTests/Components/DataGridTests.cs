@@ -4562,8 +4562,8 @@ namespace MudBlazor.UnitTests.Components
         [Test]
         public async Task DataGrid_OrderColumnsAsync()
         {
-            var comp = Context.RenderComponent<DataGridShowAndHideProgramaticallyTest>();
-            var dgComp = comp.FindComponent<MudDataGrid<DataGridShowAndHideProgramaticallyTest.Model>>();
+            var comp = Context.RenderComponent<DataGridOrderColumnsProgramaticallyTest>();
+            var dgComp = comp.FindComponent<MudDataGrid<DataGridOrderColumnsProgramaticallyTest.Model>>();
 
             dgComp.Instance.RenderedColumns.Select(c => c.Title).Count().Should().Be(5);
             
@@ -4571,6 +4571,25 @@ namespace MudBlazor.UnitTests.Components
             await comp.InvokeAsync(() => dgComp.Instance.OrderColumnsAsync(columnsToOrder));
             
             dgComp.Instance.RenderedColumns.Select(c => c.Title).Should().Equal(["Column5", "Column4", "Column3", "Column1", "Column2"]);
+        }
+        
+        [Test]
+        [TestCase("Column1", 100)]
+        [TestCase("Column3", 200)]
+        [TestCase("Column5", 300)]
+        public async Task DataGrid_ResizeColumnAsync(string columnTitle, double width)
+        {
+            var comp = Context.RenderComponent<DataGridResizeColumnsProgramaticallyTest>();
+            var dgComp = comp.FindComponent<MudDataGrid<DataGridResizeColumnsProgramaticallyTest.Model>>();
+
+            dgComp.Instance.RenderedColumns.Select(c => c.Title).Count().Should().Be(5);
+            
+            await comp.InvokeAsync(() => dgComp.Instance.ResizeColumnAsync(columnTitle, width));
+
+            var column = dgComp.Instance.RenderedColumns.FirstOrDefault(c => c.Title == columnTitle);
+            
+            column.Should().NotBeNull();
+            column?.HeaderCell.Width.Should().Be(width);
         }
         
         [Test]

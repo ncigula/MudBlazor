@@ -1,0 +1,52 @@
+﻿<MudPopoverProvider/>
+
+<MudDataGrid @ref="dataGrid" T="Model" Items="@_items" Dense ColumnResizeMode="ResizeMode.Column" Hideable>
+    <ToolBarContent>
+        <MudSelect @bind-Value="_selectedColumn" 
+                   Label="Select column to resize" 
+                   HelperText="String" 
+                   Placeholder="Please Select a Column">
+            <MudSelectItem Value="@("Column1")">Column1</MudSelectItem>
+            <MudSelectItem Value="@("Column2")">Column2</MudSelectItem>
+            <MudSelectItem Value="@("Column3")">Column3</MudSelectItem>
+            <MudSelectItem Value="@("Column4")">Column4</MudSelectItem>
+            <MudSelectItem Value="@("Column5")">Column5</MudSelectItem>
+        </MudSelect>
+        
+        <MudNumericField @bind-Value="_selectedWidth" 
+                         Label="Width" 
+                         Variant="Variant.Text" 
+                         Min="100" 
+                         Max="500" />
+        
+        <MudButton Class="mr-2"
+                   Color="Color.Primary"
+                   Variant="Variant.Outlined"
+                   OnClick="@(async () => await dataGrid.ResizeColumnAsync(_selectedColumn, _selectedWidth))">
+            Resize @_selectedColumn to @_selectedWidth
+        </MudButton>
+    </ToolBarContent>
+    <Columns>
+        <PropertyColumn Property="x => x.Column1"/>
+        <PropertyColumn Property="x => x.Column2"/>
+        <PropertyColumn Property="x => x.Column3"/>
+        <PropertyColumn Property="x => x.Column4"/>
+        <PropertyColumn Property="x => x.Column5"/>
+    </Columns>
+</MudDataGrid>
+
+@code {
+    public static string __description__ = "Tests if the columns can be resized programmatically in the MudDataGrid component.";
+    
+    private MudDataGrid<Model> dataGrid = new();
+    private IEnumerable<Model> _items = new List<Model>();
+    private string _selectedColumn = string.Empty;
+    private double _selectedWidth = 100;
+    
+    public record Model(
+        string Column1,
+        string Column2,
+        string Column3,
+        string Column4,
+        string Column5);
+}
